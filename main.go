@@ -6,9 +6,10 @@ import (
 	"log"
 	"os"
 	"strings"
-	"testgen/getters"
-	"testgen/helper"
-	"testgen/parser"
+
+	"github.com/lukmanhafidz/testgen/getters"
+	"github.com/lukmanhafidz/testgen/helper"
+	"github.com/lukmanhafidz/testgen/parser"
 
 	"github.com/dave/jennifer/jen"
 )

@@ -1,4 +1,4 @@
-module testgen
+module github.com/lukmanhafidz/testgen
 
 go 1.25.0
 

@@ -4,9 +4,10 @@ import (
 	"flag"
 	"go/ast"
 	"log"
-	"testgen/constants"
-	"testgen/helper"
-	"testgen/parser"
+
+	"github.com/lukmanhafidz/testgen/constants"
+	"github.com/lukmanhafidz/testgen/helper"
+	"github.com/lukmanhafidz/testgen/parser"
 )
 
 func GetFuncType() []*ast.FuncDecl {

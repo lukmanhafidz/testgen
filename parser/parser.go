@@ -6,7 +6,8 @@ import (
 	"go/parser"
 	"go/token"
 	"log"
-	"testgen/constants"
+
+	"github.com/lukmanhafidz/testgen/constants"
 )
 
 func ParseFileAST() *ast.File {
