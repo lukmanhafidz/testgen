@@ -3,8 +3,6 @@ module github.com/lukmanhafidz/testgen
 go 1.25.0
 
 require (
-	andromeda.ottopay.id/ottopoint/ottopoint-orm v1.9.1-0.20260302134659-3e50715d0415
-	andromeda.ottopay.id/ottopoint/ottopoint-shared v1.10.1-0.20260304125334-4b3de66f69c8
 	github.com/dave/jennifer v1.7.1
 	github.com/gofiber/fiber/v2 v2.45.0
 	github.com/google/uuid v1.6.0
