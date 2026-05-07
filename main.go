@@ -24,12 +24,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fileName := getters.GetPathFile()
+
 	currentDirParts := strings.Split(currentDir, "/")
 	mainPkg = currentDirParts[len(currentDirParts)-1]
 	usecasePkg := parser.ParsePackageAST()
-	fileName := getters.GetPathFile()
 
-	f := jen.NewFile("testgen")
+	f := jen.NewFile("tests")
 	f.Add()
 
 	mocksPath := mainPkg + "/mocks"
@@ -209,6 +210,11 @@ func main() {
 			jen.Add(resultsFunc...))
 
 	f.Add(interfaceFuncs...)
+
+	err = os.Mkdir("tests/", 0755)
+	if err != nil {
+		log.Println(err)
+	}
 
 	fileName = strings.Trim(fileName, ".go")
 	err = f.Save("tests/" + fileName + "_test.go")
