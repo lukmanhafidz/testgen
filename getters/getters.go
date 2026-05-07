@@ -1,24 +1,21 @@
 package getters
 
 import (
-	"flag"
 	"go/ast"
-	"log"
 
-	"github.com/lukmanhafidz/testgen/constants"
 	"github.com/lukmanhafidz/testgen/helper"
 	"github.com/lukmanhafidz/testgen/parser"
 )
 
-func GetFuncType() []*ast.FuncDecl {
-	return parser.ParseFuncAST()
+func GetFuncType(filepath string) []*ast.FuncDecl {
+	return parser.ParseFuncAST(filepath)
 }
 
-func GetStructType() (*ast.StructType, string) {
+func GetStructType(filepath string) (*ast.StructType, string) {
 	var structType *ast.StructType
 	var structName string
 
-	typeSpec := parser.ParseTypeAST(structType)
+	typeSpec := parser.ParseTypeAST(structType, filepath)
 
 	structName = typeSpec.Name.Name
 	// Check if the type is an Interface
@@ -29,10 +26,10 @@ func GetStructType() (*ast.StructType, string) {
 	return structType, structName
 }
 
-func GetInterfaceType() (*ast.InterfaceType, string) {
+func GetInterfaceType(filepath string) (*ast.InterfaceType, string) {
 	var interfaceType *ast.InterfaceType
 
-	typeSpec := parser.ParseTypeAST(interfaceType)
+	typeSpec := parser.ParseTypeAST(interfaceType, filepath)
 
 	interfaceName := typeSpec.Name.Name
 	// Check if the type is an Interface
@@ -83,23 +80,4 @@ func GetModelsFromUsecase(fn *ast.FuncDecl) map[string]string {
 	}
 
 	return result
-}
-
-func GetPathFile() string {
-	var fileName, filePath string
-	flag.StringVar(&fileName, "filename", "", "name of a usecase file")
-	flag.StringVar(&filePath, "filepath", "", "path of a usecase file")
-	flag.Parse()
-
-	if fileName == "" {
-		log.Fatal("flag filename not found")
-	}
-	if filePath == "" {
-		log.Fatal("flag filepath not found")
-	}
-
-	constants.FileName = fileName
-	constants.FilePath = filePath
-
-	return fileName
 }

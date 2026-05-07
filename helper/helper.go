@@ -1,10 +1,17 @@
 package helper
 
 import (
+	"flag"
 	"go/ast"
+	"log"
 	"strings"
 
 	"github.com/dave/jennifer/jen"
+)
+
+var (
+	FileName = ""
+	Package  = ""
 )
 
 func ReadExprType(expr ast.Expr, result map[string]string) {
@@ -76,4 +83,19 @@ func GenerateInit(models map[string]string) []jen.Code {
 	}
 
 	return body
+}
+
+func GetFilePath() string {
+	flag.StringVar(&FileName, "filename", "", "name of a usecase file")
+	flag.StringVar(&Package, "package", "", "package of a usecase file")
+	flag.Parse()
+
+	if FileName == "" {
+		log.Fatal("flag filename not found")
+	}
+	if Package == "" {
+		log.Fatal("flag package not found")
+	}
+
+	return FileName + Package
 }

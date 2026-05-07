@@ -19,23 +19,23 @@ func main() {
 	var structName, mainPkg string
 	funcReturn := jen.Dict{}
 
+	filePath := helper.GetFilePath()
+
 	currentDir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fileName := getters.GetPathFile()
-
 	currentDirParts := strings.Split(currentDir, "/")
 	mainPkg = currentDirParts[len(currentDirParts)-1]
-	usecasePkg := parser.ParsePackageAST()
+	usecasePkg := parser.ParsePackageAST(filePath)
 
 	f := jen.NewFile("tests")
 	f.Add()
 
 	mocksPath := mainPkg + "/mocks"
 
-	structType, structTypeName := getters.GetStructType()
+	structType, structTypeName := getters.GetStructType(filePath)
 	structName = structTypeName
 	if strings.Contains(structName, "Usecase") {
 		structName = strings.ReplaceAll(structName, "Usecase", "TestRepo")
@@ -82,7 +82,7 @@ func main() {
 		Struct(structFields...)
 
 	funcDecl := new(ast.FuncDecl)
-	funcTypes := getters.GetFuncType()
+	funcTypes := getters.GetFuncType(filePath)
 
 	usecaseModelMap := map[string]string{}
 	importAliasMap := map[string]bool{}
@@ -112,7 +112,7 @@ func main() {
 			pkgName = strings.Split(modelPkg, ".")[0]
 		}
 
-		usecaseImports := parser.ParseImportAST()
+		usecaseImports := parser.ParseImportAST(filePath)
 		for importPath, importAlias := range usecaseImports {
 			importPath = strings.Trim(importPath, `\"`)
 
@@ -160,7 +160,7 @@ func main() {
 		).
 		Line()
 
-	interfaceType, interfaceName := getters.GetInterfaceType()
+	interfaceType, interfaceName := getters.GetInterfaceType(filePath)
 	for _, methodList := range interfaceType.Methods.List {
 		methodName := "Test" + methodList.Names[0].Name
 		interfaceFuncs = append(interfaceFuncs, jen.
@@ -216,7 +216,7 @@ func main() {
 		log.Println(err)
 	}
 
-	fileName = strings.Trim(fileName, ".go")
+	fileName := strings.Trim(helper.FileName, ".go")
 	err = f.Save("tests/" + fileName + "_test.go")
 	if err != nil {
 		fmt.Printf("error: %v", err)

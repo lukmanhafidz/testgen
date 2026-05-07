@@ -6,15 +6,12 @@ import (
 	"go/parser"
 	"go/token"
 	"log"
-
-	"github.com/lukmanhafidz/testgen/constants"
 )
 
-func ParseFileAST() *ast.File {
+func ParseFileAST(pathDir string) *ast.File {
 	fset := token.NewFileSet()
-	filePath := constants.FilePath + constants.FileName
 
-	node, err := parser.ParseFile(fset, filePath, nil, parser.AllErrors)
+	node, err := parser.ParseFile(fset, pathDir, nil, parser.AllErrors)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,10 +19,10 @@ func ParseFileAST() *ast.File {
 	return node
 }
 
-func ParseTypeAST(typeAST ast.Expr) *ast.TypeSpec {
+func ParseTypeAST(typeAST ast.Expr, filepath string) *ast.TypeSpec {
 	var result *ast.TypeSpec
 
-	node := ParseFileAST()
+	node := ParseFileAST(filepath)
 	// Walk the AST to find type declarations
 	ast.Inspect(node, func(n ast.Node) bool {
 		// Look for Type Specifications (e.g., type Name interface)
@@ -58,10 +55,10 @@ func ParseTypeAST(typeAST ast.Expr) *ast.TypeSpec {
 	return result
 }
 
-func ParseFuncAST() []*ast.FuncDecl {
+func ParseFuncAST(filepath string) []*ast.FuncDecl {
 	var result []*ast.FuncDecl
 
-	node := ParseFileAST()
+	node := ParseFileAST(filepath)
 	// Walk the AST to find func declarations
 	ast.Inspect(node, func(n ast.Node) bool {
 		// Look for Type Specifications (e.g., type Name interface)
@@ -79,10 +76,10 @@ func ParseFuncAST() []*ast.FuncDecl {
 	return result
 }
 
-func ParseImportAST() map[string]string {
+func ParseImportAST(filepath string) map[string]string {
 	result := map[string]string{}
 
-	node := ParseFileAST()
+	node := ParseFileAST(filepath)
 	ast.Inspect(node, func(n ast.Node) bool {
 		// Check if the node is a General Declaration (import, const, var, type)
 		if decl, ok := n.(*ast.GenDecl); ok && decl.Tok == token.IMPORT {
@@ -102,10 +99,10 @@ func ParseImportAST() map[string]string {
 	return result
 }
 
-func ParsePackageAST() string {
+func ParsePackageAST(filepath string) string {
 	result := ""
 
-	node := ParseFileAST()
+	node := ParseFileAST(filepath)
 	ast.Inspect(node, func(n ast.Node) bool {
 		if pkg, ok := n.(*ast.File); ok {
 			result = pkg.Name.Name
@@ -115,4 +112,16 @@ func ParsePackageAST() string {
 	})
 
 	return result
+}
+
+func ParseModuleAST(currentDir string) *ast.File {
+	modPath := currentDir + "/go.mod"
+	node := ParseFileAST(modPath)
+
+	ast.Inspect(node, func(n ast.Node) bool {
+
+		return true
+	})
+
+	return node
 }
