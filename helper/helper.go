@@ -97,5 +97,5 @@ func GetFilePath() string {
 		log.Fatal("flag package not found")
 	}
 
-	return FileName + Package
+	return Package + FileName
 }
